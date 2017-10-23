@@ -61,14 +61,21 @@ public class CustomLineFormat implements MessageFormattingStrategy {
       return FALLBACK_FORMATTING_STRATEGY.formatMessage(connectionId, now, elapsed, category, prepared, sql);
     }
 
-    return customLogMessageFormat
-      .replaceAll(Pattern.quote(CONNECTION_ID), Integer.toString(connectionId))
-      .replaceAll(Pattern.quote(CURRENT_TIME), now)
-      .replaceAll(Pattern.quote(EXECUTION_TIME), Long.toString(elapsed))
-      .replaceAll(Pattern.quote(CATEGORY), category)
-      .replaceAll(Pattern.quote(EFFECTIVE_SQL), prepared)
-      .replaceAll(Pattern.quote(EFFECTIVE_SQL_SINGLELINE), P6Util.singleLine(prepared))
-      .replaceAll(Pattern.quote(SQL), sql)
-      .replaceAll(Pattern.quote(SQL_SINGLE_LINE), P6Util.singleLine(sql));
+    try
+    {
+      return customLogMessageFormat
+        .replaceAll(Pattern.quote(CONNECTION_ID), Integer.toString(connectionId))
+        .replaceAll(Pattern.quote(CURRENT_TIME), now)
+        .replaceAll(Pattern.quote(EXECUTION_TIME), Long.toString(elapsed))
+        .replaceAll(Pattern.quote(CATEGORY), category)
+        .replaceAll(Pattern.quote(EFFECTIVE_SQL), prepared)
+        .replaceAll(Pattern.quote(EFFECTIVE_SQL_SINGLELINE), P6Util.singleLine(prepared))
+        .replaceAll(Pattern.quote(SQL), sql)
+        .replaceAll(Pattern.quote(SQL_SINGLE_LINE), P6Util.singleLine(sql));
+    }
+    catch (Exception ex)
+    {
+        return FALLBACK_FORMATTING_STRATEGY.formatMessage(connectionId, now, elapsed, category, prepared, sql);
+    }
   }
 }
